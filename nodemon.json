@@ -1,0 +1,11 @@
+{
+    "verbose": true,
+    "exec": "node server.js",
+    "watch": [
+        "routes",
+        "models"
+    ],
+    "ignore": [
+        "node_modules/"
+    ]
+}

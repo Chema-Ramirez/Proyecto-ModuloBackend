@@ -13,17 +13,14 @@ const createUser = async (req, res) => {
     try{
         const userExists = await User.findOne({email})
         if(userExists){
-            return res.status(400).json({message: 'Ya existe este usuario, introduce un nuevo usuario'})
+            return res.status(400).json({message: 'This user already exists, please enter a new user'})
         }
 
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
 
-
-        const newUser = await User.create({email,name,password:hashedPassword})
+        const newUser = await User.create({email,name,password})
         const token = generateToken(newUser)
         if(!token){
-            return res.status(400).json({message: 'Error al crear el token'})
+            return res.status(400).json({message: 'Error token'})
         }
         res.status(200).json({
             _id: newUser._id,
@@ -33,9 +30,42 @@ const createUser = async (req, res) => {
         })
     }catch(error){
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido registrar usuario'})
+        res.status(500).json({message:'Error: Unable to register user'})
     }
 }
 
 
-module.exports = { createUser }
+const loginUser = async (req, res) => {
+    const { email, password } = req.body
+
+    try {
+        const user = await User.findOne({ email })
+        if (!user) {
+            return res.status(400).json({ message: 'User not found' })
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+        console.log("correcto", user.password)
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Incorrect password' })
+        }
+        
+        const token = generateToken(user)
+        if (!token) {
+            return res.status(400).json({ message: 'Error token' })
+        }
+
+        res.status(200).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            token: token,
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Error: Failed to login' })
+    }
+}
+
+module.exports = { createUser, loginUser }

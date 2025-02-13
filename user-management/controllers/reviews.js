@@ -7,18 +7,18 @@ const User = require('../models/users')
 const createReview = async(req,res)=>{
     const { productId, userId, rating, review } = req.body;
     if(rating < 1 || rating > 5){
-        return res.status(400).json({message:'La puntuación del producto debe ser entre 1 y 5'})
+        return res.status(400).json({message:'Product rating must be between 1 and 5'})
     }
 
     try {
         const product = await Product.findById(productId);
         if(!product){
-            return res.status(404).json({message:'El producto no ha sido encontrado'})
+            return res.status(404).json({message:'Product not found'})
         }
 
         const user = await User.findById(userId);
         if(!user){
-            return res.status(404).json({message:'El usuario no ha sido encontrado'})
+            return res.status(404).json({message:'User not found'})
         }
 
         const newReview = new Review({
@@ -32,7 +32,7 @@ const createReview = async(req,res)=>{
         res.status(201).json(newReview)
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido crear la valoracion del producto'})
+        res.status(500).json({message:'Error'})
     }
 }
 
@@ -43,12 +43,12 @@ const getAllReviews = async (req,res)=>{
     try {
         const reviews = await Review.find({ productId })
         if(!reviews){
-            return res.status(404).json({message:'No se han encontrado valoraciones'})
+            return res.status(404).json({message:'Reviews not found'})
         }
         res.status(200).json(reviews)
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:'Error: no se han podido obtener las valoraciones'})
+        res.status(500).json({message:'Error'})
     }
 }
 
@@ -62,12 +62,12 @@ const getReviewById = async(req,res)=>{
         .populate('productId', 'name')
         
         if(!review){
-            return res.status(400).json({message:'La valoracion no ha sido encontrada'})
+            return res.status(400).json({message:'Review not found'})
         }
         res.status(200).json(review)
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido obtener la valoracion'})
+        res.status(500).json({message:'Error'})
     }
 }
 
@@ -77,7 +77,7 @@ const updateReview = async (req,res)=>{
     const { id } = req.params;
     const { rating, review } = req.body;
     if(rating < 1 || rating > 5){
-        return res.status(400).json({message:'La puntuación del producto debe ser entre 1 y 5'})
+        return res.status(400).json({message:'Product rating must be between 1 and 5'})
     }
 
     try {
@@ -87,12 +87,12 @@ const updateReview = async (req,res)=>{
             { new: true }
         );
         if(!updateReview){
-            return res.status(400).json({message:'La valoracion no ha sido encontrada'})
+            return res.status(400).json({message:'Review not found'})
         }
-        res.status(200).json({updateReview, message:'La valoracion ha sido actualizada correctamente'})
+        res.status(200).json({updateReview, message:'Review has been updated successfully'})
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido actualizar la valoracion'})
+        res.status(500).json({message:'Error'})
     }
 }
 
@@ -103,11 +103,11 @@ const deleteReview = async(req,res)=>{
     try {
         const review = await Review.findByIdAndDelete(id)
         if(!review){
-            res.status(404).json({message:'La valoracion no ha sido encontrada'})
+            res.status(404).json({message:'Review not found'})
         }
-        res.status(200).json({message:'La valoracion ha sido eliminada con exito'})
+        res.status(200).json({message:'Review has been successfully deleted'})
     } catch (error) {
-        res.status(500).json({message:'Error: no se ha podido eliminar la valoracion'})
+        res.status(500).json({message:'Error'})
     }
 }
 

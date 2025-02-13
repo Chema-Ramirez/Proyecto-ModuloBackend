@@ -7,7 +7,7 @@ const createCategorie = async (req,res)=>{
     res.status(200).json(categorie)
 }catch(error){
     console.log(error)
-    res.status(500).json({message:'Error: no se ha podido crear la categoria'})
+    res.status(500).json({message:'Error'})
     }
 }
 
@@ -17,12 +17,12 @@ const getAllCategories = async (req, res) =>{
     try {
         const categories = await Categorie.find();
         if(!categories){
-            return res.status(404).json({message: 'No se encontraron categorias'})
+            return res.status(404).json({message: 'Categories not found'})
         }
         res.status(200).json(categories);
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: 'Error: no se han podido obtener las categorias'})
+        res.status(500).json({message: 'Error'})
     }
 };
 
@@ -32,12 +32,12 @@ const getCategorieById = async (req,res)=>{
     try{
         const categorie = await Categorie.findById(req.params.id)
         if(!categorie){
-            return res.status(400).json({message:'La categoria no ha sido encontrada'})
+            return res.status(400).json({message:'Categorie not found'})
         }
         res.status(200).json(categorie)
     }catch(error){
         console.log(error)
-        res.status(500).json({message: 'Error: no se ha podido obtener la categoria'})
+        res.status(500).json({message: 'Error'})
     }
 }
 
@@ -47,12 +47,12 @@ const updateCategorie = async(req,res)=>{
     try {
         const categorie = await Categorie.findByIdAndUpdate(req.params.id, req.body, {new: true})
         if(!categorie){
-            return res.status(404).json({message:'La categoria no ha sido encontrada'})
+            return res.status(404).json({message:'Categorie not found'})
         }
-        res.status(200).json({categorie, message:'La categoria ha sido actualizada correctamente'})
+        res.status(200).json({categorie, message:'Categorie has been updated successfully'})
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido actualizar la categoria'})
+        res.status(500).json({message:'Error'})
     }
 }
 
@@ -62,12 +62,12 @@ const deleteCategorie = async(req, res)=>{
     try {
         const categorie = await Categorie.findByIdAndDelete(req.params.id)
         if(!categorie){
-            res.stattus(404).json({message: 'La categoria no ha sido encontrada'})
+            res.stattus(404).json({message: 'Categorie not found'})
         }
-        res.status(200).json({message:'La categoria ha sido eliminada con exito'})
+        res.status(200).json({message:'Categorie has been updated successfully'})
     } catch (error) {
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido eliminar la categoria'})
+        res.status(500).json({message:'Error'})
     }
 }
 

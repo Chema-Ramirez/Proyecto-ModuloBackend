@@ -16,10 +16,10 @@ const createOrder = async (req, res) => {
             console.log(product)
             
             if (!product) {
-                return res.status(404).json({ message: 'El producto no ha sido encontrado' })
+                return res.status(404).json({ message: 'Product not found' })
             }
             if (item.quantity > product.stock) {
-                return res.status(400).json({ message: 'No hay suficiente stock del producto deseado' })
+                return res.status(400).json({ message: 'Insufficient stock' })
             }
             totalPrice += product.price * item.quantity
             console.log(totalPrice)
@@ -37,7 +37,7 @@ const createOrder = async (req, res) => {
         res.status(201).json(order)
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: 'Error: no se ha podido crear el pedido' })
+        res.status(500).json({ message: 'Error' })
     }
 }
 
@@ -48,12 +48,12 @@ const getAllOrders = async(req,res)=>{
         const orders = await Order.find()
 
         if(!orders){
-            return res.status(404).json({message:'No se han encontrado pedidos'})
+            return res.status(404).json({message:'Orders not found'})
         }
         res.status(200).json(orders)
     }catch(error){
         console.log(error)
-        res.status(500).json({message:'Error: no se ha podido obtener los pedidos'})
+        res.status(500).json({message:'Error'})
     }
 }
 
@@ -63,12 +63,12 @@ const getOrderById = async (req,res) =>{
     try{
         const order = await Order.findById(req.params.id)
         if(!order){
-            return res.status(400).json({message: 'El pedido no ha sido encontrado'})
+            return res.status(400).json({message: 'Order not found'})
         }
         res.status(200).json(order)
     }catch(error){
         console.log(error)
-        res.status(500).json({message: 'Error: no se ha podido obtener el pedido'})
+        res.status(500).json({message: 'Error'})
     }
 }
 
@@ -84,7 +84,7 @@ const updateOrder = async (req, res) => {
         console.log(updatedOrder)
         const order = await Order.findById(req.params.id)
         if (!order) {
-            return res.status(404).json({ message: 'El pedido no ha sido encontrado' })
+            return res.status(404).json({ message: 'Order not found' })
         }
         for (item of order.products) {
             console.log(item)
@@ -102,9 +102,9 @@ const updateOrder = async (req, res) => {
             const product = await Product.findById(item.product)
             console.log(product)
             if (!product) {
-                return res.status(404).json({ message: 'El producto no ha sido encontrado' })
+                return res.status(404).json({ message: 'Product not found' })
             }
-            if (item.quantity > product.stock) return res.status(400).json({ message: 'No hay suficiente stock  del producto deseado' })
+            if (item.quantity > product.stock) return res.status(400).json({ message: 'Insufficient stock' })
             totalPrice += product.price * item.quantity
             product.stock = product.stock - item.quantity
             await product.save()
@@ -115,11 +115,11 @@ const updateOrder = async (req, res) => {
         order.user = user
 
         await order.save()
-        res.status(200).json({order, message:'El pedido ha sido actualizado correctamente'})
+        res.status(200).json({order, message:'Order has been updated successfully'})
 
     } catch (error) {
         console.log(error)
-        res.status(500).json('message: Error: no se ha podido actualizar el pedido')
+        res.status(500).json({message: 'Error'})
     }
 }
 
@@ -130,15 +130,14 @@ const deleteOrder = async(req,res) =>{
     try {
         const order = await Order.findByIdAndDelete(req.params.id)
         if(!order){
-            res.status(404).json({message: 'El pedido no ha sido encontrado'})
+            res.status(404).json({message: 'Order not found'})
         }
-        res.status(200).json({message:'El pedido ha sido eliminado con exito'})
+        res.status(200).json({message:'Order has been deleted successfully'})
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: 'Error: no se ha podido eliminar el pedido'})
+        res.status(500).json({message: 'Error'})
     }
 }
-
 
 
 module.exports = { createOrder,getAllOrders, getOrderById, updateOrder, deleteOrder }

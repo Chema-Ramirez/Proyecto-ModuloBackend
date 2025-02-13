@@ -14,23 +14,20 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minLength: [6, 'Su contraseña debe tener al menos 6 caracteres, vuelva a introducir contraseña']
     }
 },
     {
         timestamps: true
 })
 
-
 const hashPassword = async (password) =>{
     try {
         const salt = await bcrypt.genSalt(10);
         return await bcrypt.hash(password, salt)
     } catch (error) {
-        throw new Error('Se ha producido un error al generar el hash de la contraseña')
+        throw new Error('An error occurred while generating the password hash')
     }
 }
-
 
 userSchema.pre('save', async function name(next) {
     if (!this.isModified('password')) return next()

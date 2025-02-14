@@ -2,9 +2,11 @@
     "verbose": true,
     "exec": "node server.js",
     "watch": [
+        "*.js",
         "routes",
         "models"
     ],
+    "ext": "js,json",
     "ignore": [
         "node_modules/"
     ]

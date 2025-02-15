@@ -5,16 +5,15 @@ const Product = require('../models/products')
 const createOrder = async (req, res) => {
     try {
         const { user, products } = req.body
-        console.log(user)
-        console.log(products)
 
-        let totalPrice = 0;
-        
+        if (!user || !products || products.length === 0) {
+            return res.status(400).json({ message: 'User and products are required' })
+        }
+
+        let totalPrice = 0
+
         for (const item of products) {
-            console.log(item)
             const product = await Product.findById(item.product)
-            console.log(product)
-            
             if (!product) {
                 return res.status(404).json({ message: 'Product not found' })
             }
@@ -22,19 +21,50 @@ const createOrder = async (req, res) => {
                 return res.status(400).json({ message: 'Insufficient stock' })
             }
             totalPrice += product.price * item.quantity
-            console.log(totalPrice)
             product.stock -= item.quantity
-            console.log(product.stock)
             await product.save()
         }
 
         const order = await Order.create({
             user,
             products,
-            totalPrice
-        })
+            totalPrice,
+            status: 'Pending',
+        });
 
         res.status(201).json(order)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Error creating order' })
+    }
+}
+
+
+const getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ user: req.body })
+
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({ message: 'Orders not found' })
+        }
+        res.status(200).json(orders);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Error' })
+    }
+};
+
+
+const getOrderById = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id)
+            .populate('products.product')
+
+        if (!order) {
+            return res.status(400).json({ message: 'Order not found' })
+        }
+
+        res.status(200).json(order)
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Error' })
@@ -42,89 +72,47 @@ const createOrder = async (req, res) => {
 }
 
 
-
-const getAllOrders = async(req,res)=>{
-    try{
-        const orders = await Order.find()
-
-        if(!orders){
-            return res.status(404).json({message:'Orders not found'})
-        }
-        res.status(200).json(orders)
-    }catch(error){
-        console.log(error)
-        res.status(500).json({message:'Error'})
-    }
-}
-
-
-
-const getOrderById = async (req,res) =>{
-    try{
-        const order = await Order.findById(req.params.id)
-        if(!order){
-            return res.status(400).json({message: 'Order not found'})
-        }
-        res.status(200).json(order)
-    }catch(error){
-        console.log(error)
-        res.status(500).json({message: 'Error'})
-    }
-}
-
-
-
-
 const updateOrder = async (req, res) => {
     const { products, user } = req.body
     try {
-        const initialOrder = await Order.findById(req.params.id)
-        console.log(initialOrder)
-        const updatedOrder = await Order.findById(req.params.id)
-        console.log(updatedOrder)
         const order = await Order.findById(req.params.id)
         if (!order) {
             return res.status(404).json({ message: 'Order not found' })
         }
-        for (item of order.products) {
-            console.log(item)
+
+        for (const item of order.products) {
             const product = await Product.findById(item.product)
             if (product) {
-                console.log(product.stock)
-                console.log(item.quantity)
                 product.stock += item.quantity
+                await product.save()
             }
-            await product.save()
         }
 
         let totalPrice = 0;
         for (const item of products) {
             const product = await Product.findById(item.product)
-            console.log(product)
             if (!product) {
                 return res.status(404).json({ message: 'Product not found' })
             }
-            if (item.quantity > product.stock) return res.status(400).json({ message: 'Insufficient stock' })
+            if (item.quantity > product.stock) {
+                return res.status(400).json({ message: 'Insufficient stock' })
+            }
             totalPrice += product.price * item.quantity
-            product.stock = product.stock - item.quantity
+            product.stock -= item.quantity
             await product.save()
         }
 
-        order.products = products
-        order.totalPrice = totalPrice
-        order.user = user
+        order.products = products;
+        order.totalPrice = totalPrice;
+        order.user = user;
 
         await order.save()
-        res.status(200).json({order, message:'Order has been updated successfully'})
-
+        res.status(200).json({ order, message: 'Order has been updated successfully' })
     } catch (error) {
         console.log(error)
-        res.status(500).json({message: 'Error'})
+        res.status(500).json({ message: 'Error' })
     }
-}
-
-
-
+};
 
 const deleteOrder = async(req,res) =>{
     try {

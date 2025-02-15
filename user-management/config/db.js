@@ -3,9 +3,9 @@ const mongoose = require('mongoose')
 const connectDB = async () => {
     try {
         mongoose.connect(process.env.MONGO_URI)
-        console.log("SE HA INICIADO LA CONEXION A LA BASE DE DATOS DE MONGODB")
+        console.log("CONNECTION TO MONGODB DATABASE HAS BEEN STARTED")
     } catch (error) {
-        console.error("ERROR AL CONECTAR A LA BASE DE DATOS DE MONGODB:", error.message)
+        console.error("ERROR CONNECTING TO MONGODB DATABASE:", error.message)
     }
 }
 

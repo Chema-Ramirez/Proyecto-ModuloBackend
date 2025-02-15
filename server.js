@@ -23,8 +23,8 @@ server.use(cors({ origin: process.env.CLIENT_URL || 'http://127.0.0.1:3005' }));
 server.use('/auth', authRouter)
 
 server.use('/categories', categoriesRouter);
-server.use('/orders', ordersRouter);
-server.use('/products', productsRouter);
+server.use('/api/orders', ordersRouter);
+server.use('/api/products', productsRouter);
 server.use('/reviews', reviewsRouter);
 server.use('/users', usersRouter);
 

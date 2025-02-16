@@ -13,11 +13,9 @@ const getUserById = async(req,res)=>{
             email:user.email
         })
     } catch (error) {
-        console.log(error)
         res.status(500).json({message:'Error'})
     }
 }
-
 
 
 const getAllUsers = async (req, res) => {
@@ -28,26 +26,33 @@ const getAllUsers = async (req, res) => {
         }
         res.status(200).json(users);
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: 'Error' });
     }
 }
 
 
-
-const updateUser = async(req,res) =>{
+const updateUser = async (req, res) => {
     try {
-        const userUpdate = await User.findByIdAndUpdate(req.params.id, {...req.body}, {new:true})
-        if(!userUpdate){
-            return res.status(404).json({message:'User not found'})
+        const userId = req.user._id; 
+        if (userId.toString() !== req.params.id) {
+            return res.status(403).json({ message: 'You cannot update this profile' });
         }
-        res.status(200).json({userUpdate, message:'User has been updated successfully'})
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                name: req.body.name,
+                email: req.body.email,
+            },
+            { new: true } 
+        )
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' })
+        }
+        res.status(200).json(updatedUser);
     } catch (error) {
-        console.log(error)
-        res.status(500).json({message: 'Error'})
+        res.status(500).json({ message: 'Error updating user' })
     }
 }
-
 
 
 const deleteUser = async(req,res)=>{
@@ -58,11 +63,9 @@ const deleteUser = async(req,res)=>{
         }
         res.status(200).json({message: 'User has been successfully deleted'})
     } catch (error) {
-        console.log(error)
         res.status(500).json({message: 'Error'})
     }
 }
-
 
 
 module.exports = { getUserById, getAllUsers, updateUser, deleteUser }

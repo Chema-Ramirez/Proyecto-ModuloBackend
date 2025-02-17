@@ -30,27 +30,35 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+
 const updateUser = async (req, res) => {
     try {
-        const userId = req.params.id;  // Obtenemos el ID de la URL
+        const userId = req.params.id;
+        
+        const existingUser = await User.findById(userId);
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             {
                 name: req.body.name,
                 email: req.body.email,
             },
-            { new: true }
-        );
+            { new: true } 
+        )
+
         if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User update failed' });
         }
+
         res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(500).json({ message: 'Error updating user' });
+        console.log("Error during user update:", error)
+        res.status(500).json({ message: 'Error updating user' })
     }
-};
-
-
+}
 
 
 const deleteUser = async(req,res)=>{

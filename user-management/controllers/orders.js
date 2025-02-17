@@ -43,20 +43,18 @@ const createOrder = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
     try {
-        const userId = req.params.userId
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
-            return res.status(400).json({ message: 'Invalid user ID' })
-        }
-        const orders = await Order.find({ user: userId }).populate('products.product');
+        const orders = await Order.find().populate('products.product')
+
         if (!orders || orders.length === 0) {
-            return res.status(404).json({ message: 'Orders not found' });
+            return res.status(404).json({ message: 'Orders not found' })
         }
-        res.status(200).json(orders);
+        
+        res.status(200).json(orders)
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Error' });
+        console.log(error)
+        res.status(500).json({ message: 'Error' })
     }
-};
+}
 
 
 const getOrderById = async (req, res) => {
@@ -69,9 +67,9 @@ const getOrderById = async (req, res) => {
         if (!orders || orders.length === 0) {
             return res.status(404).json({ message: 'Orders not found' })
         }
-        res.status(200).json(orders);
+        res.status(200).json(orders)
     } catch (error) {
-        console.log(error);
+        console.log(error)
         res.status(500).json({ message: 'Error' });
     }
 }

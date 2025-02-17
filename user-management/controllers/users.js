@@ -30,29 +30,27 @@ const getAllUsers = async (req, res) => {
     }
 }
 
-
 const updateUser = async (req, res) => {
     try {
-        const userId = req.user._id; 
-        if (userId.toString() !== req.params.id) {
-            return res.status(403).json({ message: 'You cannot update this profile' });
-        }
+        const userId = req.params.id;  // Obtenemos el ID de la URL
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             {
                 name: req.body.name,
                 email: req.body.email,
             },
-            { new: true } 
-        )
+            { new: true }
+        );
         if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' })
+            return res.status(404).json({ message: 'User not found' });
         }
         res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(500).json({ message: 'Error updating user' })
+        res.status(500).json({ message: 'Error updating user' });
     }
-}
+};
+
+
 
 
 const deleteUser = async(req,res)=>{

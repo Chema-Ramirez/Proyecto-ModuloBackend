@@ -4,7 +4,7 @@ const {createOrder, getAllOrders, updateOrder, deleteOrder, getOrderById } = req
 
 router.post('/create', createOrder)
 router.get('/', getAllOrders)
-router.get('/user/:userId', getOrderById)
+router.get('/:orderId', getOrderById);
 router.put('/:id', updateOrder)
 router.delete('/:id', deleteOrder)
 

@@ -20,6 +20,10 @@ const productSchema = new mongoose.Schema({
     imageUrl: {
         type: String,  
         required: false  
+    },
+    imageUrl2: {
+        type: String,  
+        required: false  
     }
 }, {
     timestamps: true

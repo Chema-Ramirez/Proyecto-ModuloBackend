@@ -76,6 +76,24 @@ const getAllOrders = async (req, res) => {
     }
 
 
+    const getAllOrdersByUserId = async (req, res) => {
+        try {
+            const { userId } = req.params;
+    
+            const orders = await Order.find({ user: userId })
+    
+            if (!orders || orders.length === 0) {
+                return res.status(404).json({ message: 'No orders found for this user' });
+            }
+    
+            res.json(orders)
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error while fetching orders' });
+        }
+    };
+
+
 const updateOrder = async (req, res) => {
     const { products, user } = req.body
     try {
@@ -132,4 +150,4 @@ const deleteOrder = async(req,res) =>{
 }
 
 
-module.exports = { createOrder,getAllOrders, getOrderById, updateOrder, deleteOrder }
+module.exports = { createOrder,getAllOrders, getOrderById, getAllOrdersByUserId, updateOrder, deleteOrder }

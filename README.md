@@ -14,7 +14,7 @@ Operaciones CRUD completas, validación estricta de datos, persistencia en base 
 ## Características Principales
 *   **Arquitectura Limpia:** Organización de código basada en capas (Rutas, Controladores, Modelos/Servicios) para separar responsabilidades de manera eficiente.
 *   **API RESTful:** Endpoints bien definidos y estructurados siguiendo las convenciones HTTP estándar (GET, POST, PUT, DELETE).
-*   **Tipado con TypeScript:** Interfaces y tipos definidos para prevenir errores comunes en tiempo de desarrollo.
+*   **Tipado con JavaScript:** Interfaces y tipos definidos para prevenir errores comunes en tiempo de desarrollo.
 *   **Validación con Zod:** Sanitización y validación estricta de las peticiones (`req.body`, `req.params`) antes de interactuar con la base de datos.
 *   **Gestión de Errores Dinámica:** Middleware global implementado para capturar y formatear de manera uniforme las respuestas de error.
 

@@ -6,7 +6,7 @@ Operaciones CRUD completas, validación estricta de datos, persistencia en base 
 ## Tecnologías Utilizadas
 *   **Entorno de Ejecución:** [Node.js](https://nodejs.org/)
 *   **Framework Web:** [Express.js](https://expressjs.com/)
-*   **Lenguaje:** [TypeScript](https://www.typescriptlang.org/) 
+*   **Lenguaje:** [JavaScript](https://www.javascript.com/) 
 *   **Base de Datos:** [MongoDB](https://www.mongodb.com/) 
 *   **ORM/ODM:** [Mongoose](https://mongoosejs.com/)
 *   **Validación de Datos:** [Zod](https://zod.dev/) 
